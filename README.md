@@ -29,17 +29,17 @@
     * 메뉴에서 `열기(Open)` > `열기(Open)`를 클릭합니다.
     * 다운로드한 세 개의 `.m` 파일을 차례대로 선택하여 엽니다.
 
-    ![MATLAB에서 파일 열기](image_7f2a61.png)
+    <img width="348" height="191" alt="image" src="https://github.com/user-attachments/assets/f877fc73-4450-4089-9a1c-8fed6ce90d40" />
 
 5.  **MATLAB 터미널(명령 창) 사용:**
     * MATLAB 하단에 있는 **터미널 창 (Command Window)**을 엽니다.
     * 이 창에 아래에서 설명할 데이터 변환 명령어를 입력하여 실행합니다.
 
-    ![MATLAB 터미널 창](image_7f2a25.png)
+    <img width="1881" height="485" alt="image" src="https://github.com/user-attachments/assets/84c833ed-5bfc-40ae-89de-8473e46ed5b4" />
 
 ---
 
-![구분선](image_7f2a00.png)
+<img width="1020" height="65" alt="image" src="https://github.com/user-attachments/assets/877996d1-8673-42ea-8afb-ddbb6d70b56b" />
 
 ---
 
