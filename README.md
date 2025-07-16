@@ -22,7 +22,7 @@
 
 3.  **필수 파일 다운로드:**
     변환 작업에 필요한 세 개의 MATLAB 스크립트 파일(`acofun.m`, `convertTdmsToCsv.m`, `functionforvibration.m`)을 다운로드합니다.
-    *(참고: 파일 다운로드 경로는 본 가이드에 포함되어 있지 않습니다.)*
+  
 
 4.  **MATLAB에서 파일 열기:**
     * MATLAB을 실행합니다.
