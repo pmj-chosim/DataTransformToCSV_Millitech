@@ -6,7 +6,7 @@ function functionforvibration(matFilePath, csvSavePath)
 % 1. MATLAB 파일 로드 (여기서 .mat 파일의 경로를 정확히 지정해야 합니다.)
 % 예시 경로: "C:\Users\parkm\Desktop\vibration\0Nm_BPFI_03.mat"
 % 실제 파일 경로로 수정해주세요.
-load(matFilePath); % <-- 이 부분을 동적으로 변경했습니다.
+load(matFilePath); 
 
 % 2. CSV 헤더 및 각 행에 반복될 데이터 추출 및 평탄화
 % Signal 구조체에서 y_values.values를 제외한 나머지 부분을 평탄화
