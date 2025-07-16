@@ -4,8 +4,6 @@ function functionforvibration(matFilePath, csvSavePath)
 % 각 행에 반복적으로 포함되며, 주요 y_values.values 데이터는 마지막 열에 추가됩니다.
 
 % 1. MATLAB 파일 로드 (여기서 .mat 파일의 경로를 정확히 지정해야 합니다.)
-% 예시 경로: "C:\Users\parkm\Desktop\vibration\0Nm_BPFI_03.mat"
-% 실제 파일 경로로 수정해주세요.
 load(matFilePath); 
 
 % 2. CSV 헤더 및 각 행에 반복될 데이터 추출 및 평탄화
