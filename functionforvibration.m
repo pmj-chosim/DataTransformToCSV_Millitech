@@ -1,4 +1,4 @@
-function functionforvibration()
+function functionforvibration(matFilePath, csvSavePath)
 % 이 스크립트는 MATLAB .mat 파일에서 데이터를 로드하여 CSV 파일로 변환합니다.
 % 모든 스칼라, 문자열, 작은 배열 및 중첩된 구조체 필드는 CSV 헤더로 펼쳐져
 % 각 행에 반복적으로 포함되며, 주요 y_values.values 데이터는 마지막 열에 추가됩니다.
@@ -6,7 +6,7 @@ function functionforvibration()
 % 1. MATLAB 파일 로드 (여기서 .mat 파일의 경로를 정확히 지정해야 합니다.)
 % 예시 경로: "C:\Users\parkm\Desktop\vibration\0Nm_BPFI_03.mat"
 % 실제 파일 경로로 수정해주세요.
-load("C:\Users\parkm\Desktop\acoustic\0Nm_BPFI_03.mat"); 
+load(matFilePath); % <-- 이 부분을 동적으로 변경했습니다.
 
 % 2. CSV 헤더 및 각 행에 반복될 데이터 추출 및 평탄화
 % Signal 구조체에서 y_values.values를 제외한 나머지 부분을 평탄화
@@ -20,7 +20,7 @@ Signal.y_values.values = []; % 임시로 빈 값으로 설정하여 flatten 함�
 Signal.y_values.values = temp_y_values_values;
 
 % 3. CSV 파일 준비
-csvFileName = 'aco_0Nm_BPFI_03.csv'; % 생성될 CSV 파일 이름
+csvFileName = csvSavePath; % <-- 이 부분을 동적으로 변경했습니다.
 fid = fopen(csvFileName, 'w');
 
 % 4. CSV 헤더 작성
@@ -34,9 +34,9 @@ final_headers = [final_headers, all_meta_headers];
 % y_values.quantity.label은 'g' 일 수 있습니다.
 y_quantity_label = Signal.y_values.quantity.label;
 final_headers = [final_headers, {sprintf('%s_Col1',y_quantity_label), ...
-                                  sprintf('%s_Col2',y_quantity_label), ...
-                                  sprintf('%s_Col3',y_quantity_label), ...
-                                  sprintf('%s_Col4',y_quantity_label)}];
+                                 sprintf('%s_Col2',y_quantity_label), ...
+                                 sprintf('%s_Col3',y_quantity_label), ...
+                                 sprintf('%s_Col4',y_quantity_label)}];
 
 fprintf(fid, '%s\n', strjoin(final_headers, ','));
 
@@ -87,7 +87,7 @@ fclose(fid);
 disp(['CSV 파일이 성공적으로 생성되었습니다: ', csvFileName]);
 
 % --- 중첩 함수 (Nested Function) 정의 ---
-% 이 함수는 상위 함수 'exportSignalToCSV' 내에서만 유효합니다.
+% 이 함수는 상위 함수 'functionforvibration' 내에서만 유효합니다.
 function [flat_headers, flat_values] = flatten_struct(data_struct, prefix)
     if nargin < 2
         prefix = '';
@@ -107,7 +107,11 @@ function [flat_headers, flat_values] = flatten_struct(data_struct, prefix)
                 header_name_for_scalar = ['Signal_', fieldName];
             else
                 current_prefix_for_next_level = [prefix, fieldName, '_'];
-                header_name_for_scalar = [prefix(1:end-1), '_', fieldName];
+                if ~isempty(prefix) && endsWith(prefix, '_')
+                    header_name_for_scalar = [prefix(1:end-1), '_', fieldName];
+                else
+                    header_name_for_scalar = [prefix, fieldName]; % 안전장치
+                end
             end
 
             fieldValue = data_struct.(fieldName);
@@ -130,38 +134,38 @@ function [flat_headers, flat_values] = flatten_struct(data_struct, prefix)
                     header_name = [current_prefix_for_next_level, num2str(k)];
                     if ischar(cell_content)
                         flat_headers{end+1} = header_name;
-                        flat_values{end+1} = {cell_content}; % <-- 여기에 { } 추가
+                        flat_values{end+1} = {cell_content}; % <-- 사용자님 원본 코드대로 {} 다시 삽입
                     elseif isnumeric(cell_content) && isscalar(cell_content)
                         flat_headers{end+1} = header_name;
-                        flat_values{end+1} = {num2str(cell_content)}; % <-- 여기에 { } 추가
+                        flat_values{end+1} = {num2str(cell_content)}; % <-- 사용자님 원본 코드대로 {} 다시 삽입
                     elseif isnumeric(cell_content) % 숫자 배열인 경우 (예: num, den)
                         flat_headers{end+1} = header_name;
-                        flat_values{end+1} = {['"', mat2str(cell_content), '"']}; % <-- 여기에 { } 추가
+                        flat_values{end+1} = {['"', mat2str(cell_content), '"']}; % <-- 사용자님 원본 코드대로 {} 다시 삽입
                     else % 기타 복합 타입은 JSON 문자열로 변환 시도
                         flat_headers{end+1} = header_name;
                         try
-                            flat_values{end+1} = {['"', jsonencode(cell_content), '"']}; % <-- 여기에 { } 추가
+                            flat_values{end+1} = {['"', jsonencode(cell_content), '"']}; % <-- 사용자님 원본 코드대로 {} 다시 삽입
                         catch
-                            flat_values{end+1} = {'N/A'}; % <-- 여기에 { } 추가
+                            flat_values{end+1} = {'N/A'}; % <-- 사용자님 원본 코드대로 {} 다시 삽입
                         end
                     end
                 end
             elseif ischar(fieldValue) % 문자열
                 flat_headers{end+1} = header_name_for_scalar;
-                flat_values{end+1} = {fieldValue}; % <-- 여기에 { } 추가
+                flat_values{end+1} = {fieldValue}; % <-- 사용자님 원본 코드대로 {} 다시 삽입
             elseif isnumeric(fieldValue) && isscalar(fieldValue) % 스칼라 숫자
                 flat_headers{end+1} = header_name_for_scalar;
-                flat_values{end+1} = {num2str(fieldValue, '%e')}; % <-- 여기에 { } 추가
+                flat_values{end+1} = {num2str(fieldValue, '%e')}; % <-- 사용자님 원본 코드대로 {} 다시 삽입
             elseif isnumeric(fieldValue) && ~isscalar(fieldValue) % 숫자 배열 (예: num, den)
                 flat_headers{end+1} = header_name_for_scalar;
-                flat_values{end+1} = {['"', mat2str(fieldValue), '"']}; % <-- 여기에 { } 추가
+                flat_values{end+1} = {['"', mat2str(fieldValue), '"']}; % <-- 사용자님 원본 코드대로 {} 다시 삽입
             else % 기타 데이터 타입 (논리, 함수 핸들 등)
                 flat_headers{end+1} = header_name_for_scalar;
-                flat_values{end+1} = {'UNSUPPORTED_TYPE'}; % <-- 여기에 { } 추가
+                flat_values{end+1} = {'UNSUPPORTED_TYPE'}; % <-- 사용자님 원본 코드대로 {} 다시 삽입
             end
         end
     end
 end
 
-% --- 상위 함수 'exportSignalToCSV'의 끝을 나타내는 end 키워드 ---
-end
+% --- 상위 함수 'functionforvibration'의 끝을 나타내는 end 키워드 ---
+end % <<<<<< 이 'end' 키워드는 반드시 있어야 합니다.
